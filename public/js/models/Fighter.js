@@ -1,12 +1,12 @@
 export class Fighter {
     constructor({ 
         health = 100, 
-        minDamage = 8,
-        maxDamage = 12,
+        minDamage = 1,
+        maxDamage = 2,
         AtkSpeed = 1000, 
         name = 'Fighter', 
-        dodgeChance = 0.1, 
-        critChance = 0.15, 
+        dodgeChance = 0.05, 
+        critChance = 0.05, 
         critMultiplier = 1.5
     } = {}) {
         this.health = health
@@ -26,16 +26,15 @@ export class Fighter {
     }
 
     calculateDamage() {
-        // Random damage between min and max
-        let finalDamage = this.minDamage + Math.random() * (this.maxDamage - this.minDamage)
-        
-        // Critical hit check
-        if (Math.random() < this.critChance) {
-            finalDamage *= this.critMultiplier
-            return { damage: Math.round(finalDamage), isCritical: true }
-        }
-        
-        return { damage: Math.round(finalDamage), isCritical: false }
+      const isCritical = Math.random() < this.critChance;
+      
+      // Random damage between min and max
+      const baseDamage = this.minDamage + Math.random() * (this.maxDamage - this.minDamage)
+
+      // If critical, multiply damage by critMultiplier (e.g. 1.5x)
+      const finalDamage = Math.round(isCritical ? baseDamage * this.critMultiplier : baseDamage)
+
+      return { damage: finalDamage, isCritical }
     }
 
     takeDamage(amount) {

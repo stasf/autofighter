@@ -8,9 +8,11 @@ export class Battle {
     start() {
         let nextAttack1 = 0
         let nextAttack2 = 0
+        let lastAttackTime = 0
         
         while (this.fighter1.isAlive() && this.fighter2.isAlive()) {
             if (nextAttack1 <= nextAttack2) {
+                lastAttackTime = nextAttack1
                 this.handleAttack({
                     time: nextAttack1,
                     attacker: this.fighter1,
@@ -19,6 +21,7 @@ export class Battle {
                 })
                 nextAttack1 += this.fighter1.speed
             } else {
+                lastAttackTime = nextAttack2
                 this.handleAttack({
                     time: nextAttack2,
                     attacker: this.fighter2,
@@ -29,7 +32,7 @@ export class Battle {
             }
         }
 
-        this.events.push(this.createEndEvent(Math.max(nextAttack1, nextAttack2)))
+        this.events.push(this.createEndEvent(lastAttackTime))
         return this.events
     }
 

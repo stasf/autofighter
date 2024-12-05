@@ -252,6 +252,31 @@ body {
     font-style: italic;
 }
 
+.event[data-type="draw"] {
+    left: 50%;
+    transform: translate(-50%, 0) scale(1);
+    background: rgba(158, 158, 158, 0.2);  /* Gray background for draw */
+    border: 1px solid #9e9e9e;  /* Gray border for draw */
+    font-weight: bold;
+    margin-left: 0;
+    z-index: 5;
+}
+
+.event[data-type="draw"].active {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+}
+
+.event[data-type="draw"]:hover {
+    transform: translate(-50%, 0) scale(1) !important;
+    cursor: default;
+}
+
+.event[data-type="draw"]::before,
+.event[data-type="draw"]::after {
+    display: none;
+}
+
 @media (max-width: 768px) {
     .container {
         margin: 10px;

@@ -71,8 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     eventElement.dataset.dodged = 'true'
                 }
             } else {
-                eventElement.textContent = `${event.winnerName} wins!`
-                eventElement.dataset.type = 'end'
+                eventElement.textContent = event.winner === 0 ? "Draw!" : `${event.winnerName} wins!`;
+                eventElement.dataset.type = event.winner === 0 ? 'draw' : 'end';
             }
             
             timeline.appendChild(eventElement)
@@ -132,8 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     eventElement.dataset.dodged = 'true'
                 }
             } else {
-                eventElement.textContent = `${event.winnerName} wins!`
-                eventElement.dataset.type = 'end'
+                eventElement.textContent = event.winner === 0 ? "Draw!" : `${event.winnerName} wins!`;
+                eventElement.dataset.type = event.winner === 0 ? 'draw' : 'end';
             }
             
             timeline.appendChild(eventElement)
