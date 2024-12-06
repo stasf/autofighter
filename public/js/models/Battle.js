@@ -3,6 +3,22 @@ export class Battle {
         this.fighter1 = fighter1
         this.fighter2 = fighter2
         this.events = []
+        this.stats = {
+            fighter1: {
+                totalDamage: 0,
+                hits: 0,
+                misses: 0,
+                criticalHits: 0,
+                damageReceived: 0
+            },
+            fighter2: {
+                totalDamage: 0,
+                hits: 0,
+                misses: 0,
+                criticalHits: 0,
+                damageReceived: 0
+            }
+        }
     }
 
     start() {
@@ -37,11 +53,23 @@ export class Battle {
     }
 
     handleAttack({ time, attacker, defender, attackerId }) {
-        // Calculate damage with possible crit
         const { damage, isCritical } = attacker.calculateDamage()
-        
-        // Check for dodge
         const { dodged } = defender.takeDamage(damage)
+
+        // Update stats
+        const attackerStats = attackerId === 1 ? this.stats.fighter1 : this.stats.fighter2
+        const defenderStats = attackerId === 1 ? this.stats.fighter2 : this.stats.fighter1
+
+        if (dodged) {
+            attackerStats.misses++
+        } else {
+            attackerStats.hits++
+            attackerStats.totalDamage += damage
+            defenderStats.damageReceived += damage
+            if (isCritical) {
+                attackerStats.criticalHits++
+            }
+        }
 
         // Record what happened
         this.events.push({
@@ -59,13 +87,17 @@ export class Battle {
     }
 
     createEndEvent(time) {
+        const winner = this.fighter1.isAlive() ? 1 : 2
+        const winnerName = this.fighter1.isAlive() ? this.fighter1.name : this.fighter2.name
+        
         return {
             time,
             type: 'end',
             fighter1HP: this.fighter1.health,
             fighter2HP: this.fighter2.health,
-            winner: this.fighter1.isAlive() ? 1 : 2,
-            winnerName: this.fighter1.isAlive() ? this.fighter1.name : this.fighter2.name
+            winner,
+            winnerName,
+            stats: this.stats
         }
     }
 }

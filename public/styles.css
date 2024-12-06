@@ -11,11 +11,22 @@ body {
 
 .container {
     width: 100%;
-    max-width: 800px;
-    margin: 20px;
-    padding: 20px;
+    max-width: 1200px;
+    margin: 10px;
+    padding: 10px;
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.battle-container {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+    align-items: flex-start;
 }
 
 .fighters {
@@ -72,55 +83,42 @@ body {
 }
 
 .timeline {
+    flex: 2;
     position: relative;
-    height: 500px;
-    margin: 0 auto;
-    padding: 20px;
-    width: 100%;
-    max-width: 600px;
+    height: 400px;
+    padding: 10px;
+    padding-left: 130px;
+    padding-right: 130px;
+    margin: 0;
+    transform: none;
+    left: 0;
 }
 
-.timeline::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    width: 2px;
-    background: rgba(255, 255, 255, 0.2);
-}
-
+.timeline::after,
 .timeline::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
     left: 50%;
-    width: 10px;
-    background: repeating-linear-gradient(
-        to bottom,
-        transparent,
-        transparent 49px,
-        rgba(255, 255, 255, 0.2) 49px,
-        rgba(255, 255, 255, 0.2) 50px
-    );
+    transform: translateX(-50%);
 }
 
 .event {
     position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     padding: 6px 10px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 4px;
     opacity: 0;
-    transition: all 0.3s ease;
+    transition: bottom 0.3s ease-out, opacity 0.3s ease-out;
     color: #e1e3d8;
     white-space: nowrap;
     width: fit-content;
     backdrop-filter: blur(5px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     z-index: 1;
-    font-size: 14px;
+    font-size: 12px;
+    padding: 4px 8px;
+    max-width: 120px;
 }
 
 .event:hover {
@@ -138,9 +136,8 @@ body {
 }
 
 .event[data-attacker="1"] {
-    transform: translateX(-100%) scale(0.95);
-    margin-left: -10px;
-    left: 0;
+    left: 50%;
+    transform: translateX(calc(-100% - 10px)) scale(0.95);
     border-left: 3px solid #4CAF50;
 }
 
@@ -150,16 +147,16 @@ body {
 
 .event[data-attacker="1"].active {
     opacity: 1;
-    transform: translateX(-100%) scale(1);
+    transform: translateX(calc(-100% - 10px)) scale(1);
 }
 
 .event[data-attacker="1"]:hover {
-    transform: translateX(-100%) scale(1.1) !important;
+    transform: translateX(calc(-100% - 10px)) scale(1.1) !important;
 }
 
 .event[data-attacker="2"] {
+    left: 50%;
     transform: translateX(10px) scale(0.95);
-    left: 100%;
     border-left: 3px solid #f44336;
 }
 
@@ -277,105 +274,122 @@ body {
     display: none;
 }
 
-@media (max-width: 768px) {
-    .container {
-        margin: 10px;
-        padding: 10px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+@keyframes attack {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(20px); }
+    100% { transform: translateX(0); }
+}
 
-    .timeline {
-        position: relative;
-        height: 400px;
-        padding: 10px;
-        padding-left: 130px;
-        padding-right: 130px;
-        margin: 0;
-        transform: none;
-        left: 0;
+@keyframes hit {
+    0% { transform: translateX(0); }
+    25% { 
+        transform: translateX(-10px);
+        filter: brightness(150%);
     }
-
-    .timeline::after,
-    .timeline::before {
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
-    .event[data-attacker="1"] {
-        left: 50%;
-        transform: translateX(calc(-100% - 10px)) scale(0.95);
-    }
-
-    .event[data-attacker="2"] {
-        left: 50%;
-        transform: translateX(10px) scale(0.95);
-    }
-
-    .event[data-attacker="1"].active {
-        transform: translateX(calc(-100% - 10px)) scale(1);
-    }
-
-    .event[data-attacker="2"].active {
-        transform: translateX(10px) scale(1);
-    }
-
-    .event[data-attacker="1"]:hover {
-        transform: translateX(calc(-100% - 10px)) scale(1.1) !important;
-    }
-
-    .event[data-attacker="2"]:hover {
-        transform: translateX(10px) scale(1.1) !important;
-    }
-
-    .event {
-        font-size: 12px;
-        padding: 4px 8px;
-        max-width: 120px;
-    }
-
-    .event::after {
-        width: 10px;
-    }
-
-    .event[data-attacker="1"]::after {
-        right: -10px;
-    }
-
-    .event[data-attacker="2"]::after {
-        left: -10px;
-    }
-
-    .event::before {
-        width: 8px;
-        height: 8px;
-    }
-
-    .event[data-attacker="1"]::before {
-        right: -14px;
-    }
-
-    .event[data-attacker="2"]::before {
-        left: -14px;
+    100% { 
+        transform: translateX(0);
+        filter: brightness(100%);
     }
 }
 
-@media (max-width: 480px) {
-    .timeline {
-        height: 350px;
-        padding-left: 110px;
-        padding-right: 110px;
-    }
+.fighter.attacking {
+    animation-name: attack;
+    animation-duration: 0.6s;
+    animation-timing-function: ease-in-out;
+}
 
-    .event {
-        font-size: 11px;
-        max-width: 100px;
-        white-space: normal;
-    }
+.fighter.getting-hit {
+    animation-name: hit;
+    animation-duration: 0.6s;
+    animation-timing-function: ease-in-out;
+}
 
-    #playButton {
-        width: 100%;
-        margin: 10px 0;
+#fighter2.attacking {
+    animation-name: attack;
+    animation-duration: 0.6s;
+    animation-timing-function: ease-in-out;
+    animation-direction: reverse;
+}
+
+.battle-stats {
+    flex: 1;
+    position: relative;
+    min-width: 250px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 8px;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-out forwards;
+    z-index: 10;
+    align-self: stretch;
+}
+
+.battle-result {
+    text-align: center;
+    color: #4CAF50;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.battle-result.draw {
+    color: #9e9e9e;
+}
+
+.stats-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.fighter-stats {
+    width: 100%;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.fighter-stats h3 {
+    color: #4CAF50;
+    margin-bottom: 10px;
+}
+
+.fighter-stats p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes attack-vertical {
+    0% { transform: translateY(0); }
+    25% { transform: translateY(-20px); }
+    100% { transform: translateY(0); }
+}
+
+@keyframes hit-vertical {
+    0% { transform: translateY(0); }
+    25% { 
+        transform: translateY(10px);
+        filter: brightness(150%);
     }
+    100% { 
+        transform: translateY(0);
+        filter: brightness(100%);
+    }
+}
+
+.fighters[data-stacked="true"] .fighter.attacking {
+    animation-name: attack-vertical;
+}
+
+.fighters[data-stacked="true"] .fighter.getting-hit {
+    animation-name: hit-vertical;
+}
+
+.fighters[data-stacked="true"] #fighter2.attacking {
+    animation-name: attack-vertical;
+    animation-direction: normal;
 } 
